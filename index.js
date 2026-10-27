@@ -863,7 +863,7 @@ function buildBinanceJapanMaintenancePreview(data = {}) {
 <tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#ffffff;border-collapse:collapse;">
 
-<tr><td align="center" style="background:#f0b90b;padding:29px 20px 27px;">
+<tr><td align="center" style="background:#f0b90b;padding:42px 20px 40px;">
 <div style="font-size:29px;line-height:1;font-weight:700;letter-spacing:1px;color:#181a20;">◈ BINANCE</div>
 </td></tr>
 
@@ -890,16 +890,27 @@ INTERNAL DESIGN PREVIEW
 
 <tr><td align="center" style="padding:16px 20px 10px;font-size:21px;line-height:1.2;font-weight:700;">今すぐダウンロード</td></tr>
 
-<tr><td style="padding:0 31px 20px;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
-<td width="49%" align="center" style="background:#080b0f;border-radius:8px;color:#ffffff;padding:9px 5px;">
-<div style="font-size:9px;">GET IT ON</div><div style="font-size:20px;font-weight:700;">Google Play</div>
+<tr><td style="padding:0 31px 22px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+<tr>
+<td width="50%" align="center" style="padding:5px 6px;vertical-align:middle;">
+<img
+    src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/20727a23-53f6-460c-9a20-8114852f3d26/google-play-ja.png"
+    alt="Google Play で手に入れよう"
+    width="184"
+    style="display:block;width:184px;max-width:100%;height:auto;border:0;margin:0 auto;"
+>
 </td>
-<td width="2%"></td>
-<td width="49%" align="center" style="background:#080b0f;border-radius:8px;color:#ffffff;padding:9px 5px;">
-<div style="font-size:9px;">Download on the</div><div style="font-size:20px;font-weight:700;">App Store</div>
+<td width="50%" align="center" style="padding:5px 6px;vertical-align:middle;">
+<img
+    src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/890eb7f3-d040-42e2-a2cc-05b7ad9a5a5d/app-store-ja.png"
+    alt="App Store からダウンロード"
+    width="148"
+    style="display:block;width:148px;max-width:100%;height:auto;border:0;margin:0 auto;"
+>
 </td>
-</tr></table>
+</tr>
+</table>
 </td></tr>
 
 <tr><td style="padding:0 29px;"><div style="border-top:1px solid #181a20;font-size:0;line-height:0;">&nbsp;</div></td></tr>
