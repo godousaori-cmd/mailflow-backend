@@ -831,6 +831,110 @@ Golden Xがメールでパスワードや認証コードなどの機密情報を
     `;
 }
 
+
+/* =========================================================
+   BINANCE JAPAN MAINTENANCE — INTERNAL PREVIEW V1
+========================================================= */
+function buildBinanceJapanMaintenancePreview(data = {}) {
+    const intro = textToHtml(data.body || `Binance Japanをご利用の皆様へ
+
+いつもBinance Japanをご利用いただきありがとうございます。
+
+ドコモSMTBネット銀行において、以下のとおりメンテナンスが予定されています。
+メンテナンス期間中にドコモSMTBネット銀行を利用して当社への入金または当社からの出金を行う場合、入出金が正常に実行されない、または通常よりお時間をいただく可能性があります。メンテナンス期間中のご利用の際はご注意ください。
+
+なお、ドコモSMTBネット銀行のメンテナンス期間中も、以下の方法による入出金はご利用いただけます。
+
+お急ぎの場合は、他の入出金方法のご利用もご検討ください。`);
+
+    const maintenance = textToHtml(data.maintenance || '10月9日(金)15:00 ～ 10月13日(火) 8:00');
+    const methods = textToHtml(data.methods || 'PayPayマネー\nGMOあおぞらネット銀行');
+    const antiPhishingCode = escapeHtml(data.anti_phishing_code || 'INTERNAL PREVIEW');
+
+    return `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#eeeeee;color:#181a20;font-family:Arial,'Hiragino Kaku Gothic ProN','Yu Gothic',Meiryo,sans-serif;">
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">INTERNAL PREVIEW — Binance-style visual reference</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#ffffff;border-collapse:collapse;">
+
+<tr><td align="center" style="background:#f0b90b;padding:29px 20px 27px;">
+<div style="font-size:29px;line-height:1;font-weight:700;letter-spacing:1px;color:#181a20;">◈ BINANCE</div>
+</td></tr>
+
+<tr><td align="center" style="background:#fff7d6;padding:6px 15px;font-size:9px;line-height:1.3;color:#6b5900;">
+INTERNAL DESIGN PREVIEW
+</td></tr>
+
+<tr><td style="padding:21px 29px 0;font-size:14px;line-height:1.45;color:#181a20;">
+<div>${intro}</div>
+
+<div style="text-align:center;font-weight:700;font-size:15px;margin:22px 0 12px;">【メンテナンス予定】</div>
+<table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 0 31px;font-size:14px;line-height:1.55;">
+<tr><td style="vertical-align:top;padding-right:10px;">•</td><td>${maintenance}</td></tr>
+</table>
+
+<div style="text-align:center;font-weight:700;font-size:15px;margin:25px 0 13px;">【上記メンテナンス期間中もご利用可能な入出金方法】</div>
+<div style="margin-left:31px;font-size:14px;line-height:1.55;">• ${methods.replace(/<br>/g, '<br>• ')}</div>
+
+<p style="margin:30px 0 0;">引き続きBinance Japanをよろしくお願いいたします。</p>
+<p style="margin:17px 0 0;">Binance Japan チーム</p>
+</td></tr>
+
+<tr><td style="padding:43px 29px 0;"><div style="border-top:1px solid #181a20;font-size:0;line-height:0;">&nbsp;</div></td></tr>
+
+<tr><td align="center" style="padding:16px 20px 10px;font-size:21px;line-height:1.2;font-weight:700;">今すぐダウンロード</td></tr>
+
+<tr><td style="padding:0 31px 20px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
+<td width="49%" align="center" style="background:#080b0f;border-radius:8px;color:#ffffff;padding:9px 5px;">
+<div style="font-size:9px;">GET IT ON</div><div style="font-size:20px;font-weight:700;">Google Play</div>
+</td>
+<td width="2%"></td>
+<td width="49%" align="center" style="background:#080b0f;border-radius:8px;color:#ffffff;padding:9px 5px;">
+<div style="font-size:9px;">Download on the</div><div style="font-size:20px;font-weight:700;">App Store</div>
+</td>
+</tr></table>
+</td></tr>
+
+<tr><td style="padding:0 29px;"><div style="border-top:1px solid #181a20;font-size:0;line-height:0;">&nbsp;</div></td></tr>
+
+<tr><td align="center" style="padding:14px 20px 20px;font-size:20px;line-height:1.25;font-weight:700;">最新情報をお見逃しなく！</td></tr>
+
+<tr><td style="padding:0 29px 12px;font-size:9px;line-height:1.55;color:#181a20;">
+高い安全性を保つため、フィッシング対策コードをご確認してください。
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-top:8px;"><tr><td align="right">
+<span style="display:inline-block;background:#f0b90b;padding:3px 10px;font-size:8px;">Anti-phishing</span>
+<span style="display:inline-block;background:#eeeeee;padding:3px 10px;font-size:8px;">${antiPhishingCode}</span>
+</td></tr></table>
+</td></tr>
+
+<tr><td style="padding:7px 29px 27px;font-size:8px;line-height:1.5;color:#181a20;">
+<strong>リスク警告:</strong> 暗号資産の取引は、高い市場リスクを伴います。暗号資産に関する取引を行う場合は、十分な注意が必要です。
+</td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
+function selectCampaignTemplate(templateData) {
+    const key = String(templateData?.template_key || '').trim();
+
+    if (key === 'binance_japan_maintenance_preview_v1') {
+        return buildBinanceJapanMaintenancePreview(templateData);
+    }
+
+    return buildGoldenXEmail(templateData);
+}
+
 /* =========================================================
    HEALTH CHECK
 ========================================================= */
@@ -1081,11 +1185,20 @@ app.post(
                     req.body?.signature,
 
                 privacy_url:
-                    req.body?.privacy_url
+                    req.body?.privacy_url,
+
+                maintenance:
+                    req.body?.maintenance,
+
+                methods:
+                    req.body?.methods,
+
+                anti_phishing_code:
+                    req.body?.anti_phishing_code
             };
 
             const html =
-                buildGoldenXEmail(
+                selectCampaignTemplate(
                     templateData
                 );
 
