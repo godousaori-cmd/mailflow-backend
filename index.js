@@ -952,7 +952,12 @@ function buildBinanceJapanFullPreview(data = {}) {
 <body style="margin:0;padding:0;background:#eee;color:#181a20;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#fff;">
-<tr><td align="center" style="background:#f0b90b;padding:42px 20px 40px;"><div style="font-size:29px;font-weight:700;letter-spacing:1px;">◈ BINANCE</div></td></tr>
+<tr><td align="center" style="background:#f0b90b;padding:42px 20px 40px;"><img
+src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/1bdab81e-8620-4e5b-9c35-237a604609cf/binance-logo-black.png"
+alt="Binance"
+width="200"
+style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;"
+></td></tr>
 <tr><td align="center" style="background:#fff7d6;padding:7px 15px;font-size:10px;font-weight:700;color:#6b5900;">INTERNAL DESIGN PREVIEW</td></tr>
 <tr><td style="padding:24px 29px 0;font-size:14px;line-height:1.45;">${body}
 <div style="text-align:center;font-weight:700;font-size:15px;margin:24px 0 12px;">【メンテナンス予定】</div><div style="margin-left:31px;">• ${maintenance}</div>
