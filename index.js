@@ -16,10 +16,6 @@ const FROM_EMAIL =
     process.env.FROM_EMAIL ||
     'MailFlow <info@mailflow-jp.com>';
 
-/*
- * Para produção, prefira mover essas URLs para variáveis
- * de ambiente permanentes no Render.
- */
 const GOLDEN_X_LOGO_URL =
     process.env.GOLDEN_X_LOGO_URL || '';
 
@@ -111,70 +107,169 @@ function textToHtml(value = '') {
 }
 
 /* =========================================================
-   GOLDEN X EMAIL TEMPLATE
+   GOLDEN X EMAIL TEMPLATE V2
 ========================================================= */
 
 function buildGoldenXEmail(data) {
+    const colors = {
+        gold: '#f8cc28',
+        paper: '#ffffff',
+        background: '#f2f2f2',
+        ink: '#191919',
+        muted: '#666666',
+        line: '#dedede',
+        alert: '#a31d29'
+    };
+
+    function httpsUrl(value = '') {
+        try {
+            const url = new URL(String(value || ''));
+
+            if (
+                url.protocol !== 'https:' ||
+                url.username ||
+                url.password
+            ) {
+                return '';
+            }
+
+            return url.toString();
+        } catch {
+            return '';
+        }
+    }
+
+    function renderText(value = '') {
+        return escapeHtml(String(value || ''))
+            .replace(/\r\n/g, '\n')
+            .replace(/\r/g, '\n')
+            .replace(/\n/g, '<br>');
+    }
+
+    function replaceVars(value = '', vars = {}) {
+        let result = String(value || '');
+
+        for (const [key, val] of Object.entries(vars)) {
+            result = result
+                .split(`{{${key}}}`)
+                .join(String(val ?? ''));
+        }
+
+        return result;
+    }
+
     const name =
-        escapeHtml(data.name || 'お客様');
+        String(data.name || 'お客様').trim();
 
     const deadline =
-        escapeHtml(data.deadline || '');
+        String(data.deadline || '').trim();
+
+    const vars = {
+        name,
+        deadline,
+        verification_url:
+            String(data.verification_url || ''),
+        support_email:
+            String(data.support_email || ''),
+        google_play_url:
+            String(data.google_play_url || ''),
+        app_store_url:
+            String(data.app_store_url || ''),
+        privacy_url:
+            String(data.privacy_url || '')
+    };
 
     const preheader =
         escapeHtml(
             data.preheader ||
-            'Golden Xからのお知らせです。'
+            '安全のため、Golden X公式ページから確認手続きをお願いいたします。'
+        );
+
+    const salutation =
+        renderText(
+            replaceVars(
+                data.salutation ||
+                '{{name}} 様',
+                vars
+            )
         );
 
     const heading =
-        escapeHtml(
-            data.heading ||
-            'アカウントに関するご確認のお願い'
-        );
+        data.heading
+            ? `
+                <h1 style="
+                    font-size:22px;
+                    line-height:1.5;
+                    margin:0 0 24px;
+                ">
+                    ${escapeHtml(data.heading)}
+                </h1>
+            `
+            : '';
 
     const body =
-        data.body
-            ? textToHtml(data.body)
-            : `
-                いつもGolden Xをご利用いただき、
-                誠にありがとうございます。<br>
-                Golden X コンプライアンス担当チームです。
-                <br><br>
-                お客様のアカウントに関する
-                確認事項がございます。
-            `;
+        renderText(
+            replaceVars(
+                data.body ||
+                `いつもGolden Xをご利用いただき、誠にありがとうございます。
+Golden X コンプライアンス担当チームです。
 
-    const verificationUrl =
-        safeUrl(data.verification_url);
+この度、お客様のアカウントに関する確認事項がございます。
 
-    const googlePlayUrl =
-        safeUrl(data.google_play_url);
+マネーロンダリング防止（AML）およびセキュリティ上の確認のため、以下の項目についてご確認をお願いいたします。`,
+                vars
+            )
+        );
 
-    const appStoreUrl =
-        safeUrl(data.app_store_url);
+    const confirmationBody =
+        renderText(
+            replaceVars(
+                data.confirmation_body ||
+                `Q1. ご入金いただいた暗号資産の具体的な入手元
 
-    const snsUrl =
-        safeUrl(data.sns_url);
+Q2. ご入金元の取引所名またはウォレット名
 
-    const unsubscribeUrl =
-        safeUrl(data.unsubscribe_url);
+Q3. 今回のご入金の主な目的、および今後の運用予定
 
-    const supportEmail =
-        escapeHtml(
-            data.support_email ||
-            'info@mailflow-jp.com'
+Q4. 現在のご職業と、ご入金資金との関連性について
+
+Q5. 第三者からの依頼や代理によるご入金ではないことの確認`,
+                vars
+            )
+        );
+
+    const closingBody =
+        renderText(
+            replaceVars(
+                data.closing_body ||
+                `期限までにお手続きいただけない場合、一部サービスのご利用に制限がかかる場合がございます。
+
+セキュリティ保護のため、パスワード、認証コード、口座情報などの機密情報をメールでお送りいただく必要はございません。
+上記の確認事項への回答を含む必要な確認手続きは、Golden X公式ページからお願いいたします。`,
+                vars
+            )
         );
 
     const disclaimer =
-        data.disclaimer
-            ? textToHtml(data.disclaimer)
-            : `
-                本メールはGolden Xからのお知らせです。
-                セキュリティ保護のため、
-                パスワードや認証コードなどの
-                機密情報をメールで送信しないでください。
-            `;
+        renderText(
+            replaceVars(
+                data.disclaimer ||
+                `本メールはGolden Xからの重要なお知らせです。
+Golden Xがメールでパスワードや認証コードなどの機密情報をお伺いすることはありません。
+不審なメールやリンクには十分ご注意ください。`,
+                vars
+            )
+        );
+
+    const signature =
+        renderText(
+            replaceVars(
+                data.signature ||
+                `Golden X
+コンプライアンス担当チーム`,
+                vars
+            )
+        );
 
     const ctaText =
         escapeHtml(
@@ -182,197 +277,273 @@ function buildGoldenXEmail(data) {
             '確認手続きを行う'
         );
 
-    const logo = GOLDEN_X_LOGO_URL
-        ? `
+    const verificationUrl =
+        httpsUrl(data.verification_url);
+
+    const googlePlayUrl =
+        httpsUrl(data.google_play_url);
+
+    const appStoreUrl =
+        httpsUrl(data.app_store_url);
+
+    const privacyUrl =
+        httpsUrl(data.privacy_url);
+
+    const unsubscribeUrl =
+        httpsUrl(data.unsubscribe_url);
+
+    const logoUrl =
+        httpsUrl(data.logo_url) ||
+        httpsUrl(GOLDEN_X_LOGO_URL);
+
+    const symbolUrl =
+        httpsUrl(data.symbol_url) ||
+        httpsUrl(GOLDEN_X_SYMBOL_URL);
+
+    /*
+     * Imagens oficiais dos badges usadas pelo
+     * preview Golden X v2.
+     */
+    const googlePlayBadge =
+        httpsUrl(
+            process.env.GOLDEN_X_GOOGLE_PLAY_BADGE_URL ||
+            'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/20727a23-53f6-460c-9a20-8114852f3d26/google-play-ja.png'
+        );
+
+    const appStoreBadge =
+        httpsUrl(
+            process.env.GOLDEN_X_APP_STORE_BADGE_URL ||
+            'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/890eb7f3-d040-42e2-a2cc-05b7ad9a5a5d/app-store-ja.png'
+        );
+
+    const supportEmail =
+        String(
+            data.support_email ||
+            'goldenxsupport@gmail.com'
+        ).trim();
+
+    const supportHtml =
+        validEmail(supportEmail)
+            ? `
+                <a
+                    href="mailto:${escapeHtml(supportEmail)}"
+                    style="
+                        color:${colors.ink};
+                        text-decoration:none;
+                    "
+                >
+                    ${escapeHtml(supportEmail)}
+                </a>
+            `
+            : escapeHtml(supportEmail);
+
+    const img = (
+        url,
+        alt,
+        width
+    ) => {
+        if (!url) {
+            return '';
+        }
+
+        return `
             <img
-                src="${escapeHtml(GOLDEN_X_LOGO_URL)}"
-                alt="Golden X"
-                width="280"
+                src="${escapeHtml(url)}"
+                alt="${escapeHtml(alt)}"
+                width="${width}"
                 style="
                     display:block;
-                    width:100%;
-                    max-width:280px;
+                    width:${width}px;
+                    max-width:100%;
                     height:auto;
-                    margin:0 auto;
                     border:0;
+                    margin:0 auto;
                 "
             >
-        `
-        : `
-            <div style="
-                font-size:44px;
-                line-height:1;
-                font-weight:800;
-                color:#ffffff;
-                letter-spacing:-2px;
-            ">
-                Golden X
-            </div>
         `;
+    };
 
-    const deadlineBlock = deadline
-        ? `
-            <div style="
-                margin:30px 0;
-                text-align:center;
-                font-size:19px;
-                line-height:1.6;
-                font-weight:700;
-                color:#a5362a;
-            ">
-                【ご対応期限：${deadline}】
-            </div>
-        `
-        : '';
-
-    const ctaBlock = verificationUrl
-        ? `
-            <div style="
-                text-align:center;
-                margin:32px 0;
-            ">
+    const linkOrSpan = (
+        url,
+        inner,
+        style
+    ) => {
+        if (url) {
+            return `
                 <a
-                    href="${escapeHtml(verificationUrl)}"
-                    style="
-                        display:inline-block;
-                        background:#0b2447;
-                        color:#ffffff;
-                        text-decoration:none;
-                        font-weight:700;
-                        font-size:16px;
-                        line-height:1;
-                        padding:16px 30px;
-                        border-radius:6px;
-                    "
+                    href="${escapeHtml(url)}"
+                    style="${style}"
                 >
-                    ${ctaText}
+                    ${inner}
                 </a>
-            </div>
-        `
-        : '';
+            `;
+        }
 
-    const googlePlayBlock = googlePlayUrl
-        ? `
-            <a
-                href="${escapeHtml(googlePlayUrl)}"
-                style="
-                    display:inline-block;
-                    margin:6px;
-                    padding:13px 20px;
-                    background:#000000;
-                    color:#ffffff;
-                    text-decoration:none;
-                    border-radius:7px;
-                    font-size:14px;
-                    font-weight:700;
-                "
-            >
-                Google Play
-            </a>
-        `
-        : '';
+        return `
+            <span style="${style}">
+                ${inner}
+            </span>
+        `;
+    };
 
-    const appStoreBlock = appStoreUrl
-        ? `
-            <a
-                href="${escapeHtml(appStoreUrl)}"
-                style="
-                    display:inline-block;
-                    margin:6px;
-                    padding:13px 20px;
-                    background:#000000;
-                    color:#ffffff;
-                    text-decoration:none;
-                    border-radius:7px;
-                    font-size:14px;
-                    font-weight:700;
-                "
-            >
-                App Store
-            </a>
-        `
-        : '';
-
-    const socialBlock = snsUrl
-        ? `
-            <div style="
-                text-align:center;
-                margin-top:28px;
-            ">
-                <div style="
-                    font-size:20px;
-                    font-weight:700;
-                    margin-bottom:12px;
+    const headerLogo =
+        logoUrl
+            ? img(
+                logoUrl,
+                'Golden X',
+                280
+            )
+            : `
+                <strong style="
+                    font-size:32px;
+                    color:#191919;
                 ">
-                    最新情報をお見逃しなく！
-                </div>
-
-                <a
-                    href="${escapeHtml(snsUrl)}"
-                    style="
-                        color:#111827;
-                        text-decoration:underline;
-                    "
-                >
                     Golden X
-                </a>
-            </div>
-        `
-        : '';
+                </strong>
+            `;
 
-    const unsubscribeBlock = unsubscribeUrl
-        ? `
-            <div style="
-                margin-top:20px;
-                text-align:center;
-            ">
-                <a
-                    href="${escapeHtml(unsubscribeUrl)}"
+    const deadlineBlock =
+        deadline
+            ? `
+                <p
+                    class="gx-deadline"
                     style="
-                        color:#6b7280;
-                        text-decoration:underline;
+                        margin:34px 0 24px;
+                        text-align:center;
+                        font-size:20px;
+                        font-weight:bold;
+                        color:${colors.alert};
                     "
                 >
-                    配信停止
-                </a>
-            </div>
-        `
-        : '';
+                    【ご対応期限：${escapeHtml(deadline)}】
+                </p>
+            `
+            : '';
+
+    const ctaBlock =
+        linkOrSpan(
+            verificationUrl,
+            ctaText,
+            `
+                display:inline-block;
+                padding:16px 30px;
+                max-width:100%;
+                box-sizing:border-box;
+                font-weight:bold;
+                color:${colors.ink};
+                text-decoration:none;
+            `
+        );
+
+    const googleBadge =
+        googlePlayBadge
+            ? linkOrSpan(
+                googlePlayUrl,
+                img(
+                    googlePlayBadge,
+                    'Google Play で手に入れよう',
+                    184
+                ),
+                `
+                    display:inline-block;
+                    text-decoration:none;
+                    max-width:100%;
+                `
+            )
+            : '';
+
+    const appleBadge =
+        appStoreBadge
+            ? linkOrSpan(
+                appStoreUrl,
+                img(
+                    appStoreBadge,
+                    'App Store からダウンロード',
+                    148
+                ),
+                `
+                    display:inline-block;
+                    text-decoration:none;
+                    max-width:100%;
+                `
+            )
+            : '';
+
+    const privacy =
+        linkOrSpan(
+            privacyUrl,
+            'プライバシーポリシー',
+            `
+                color:${colors.muted};
+                text-decoration:${
+                    privacyUrl
+                        ? 'underline'
+                        : 'none'
+                };
+            `
+        );
+
+    const unsubscribe =
+        linkOrSpan(
+            unsubscribeUrl,
+            '配信停止',
+            `
+                color:${colors.muted};
+                text-decoration:${
+                    unsubscribeUrl
+                        ? 'underline'
+                        : 'none'
+                };
+            `
+        );
 
     return `
 <!doctype html>
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
+        content="width=device-width,initial-scale=1"
     >
-    <title>Golden X</title>
+
+    <style>
+        @media(max-width:480px){
+            .gx-content{
+                padding:28px 20px!important;
+            }
+
+            .gx-header{
+                padding:38px 24px!important;
+            }
+
+            .gx-deadline{
+                font-size:18px!important;
+            }
+        }
+    </style>
 </head>
 
 <body style="
     margin:0;
     padding:0;
-    background:#f3f4f6;
+    background:${colors.background};
+    color:${colors.ink};
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        'Noto Sans JP',
+        Arial,
         'Hiragino Kaku Gothic ProN',
         'Yu Gothic',
         Meiryo,
-        Arial,
         sans-serif;
-    color:#111111;
 ">
 
+    <!-- PREHEADER -->
     <div style="
         display:none;
         max-height:0;
         overflow:hidden;
-        opacity:0;
+        mso-hide:all;
     ">
         ${preheader}
     </div>
@@ -382,232 +553,274 @@ function buildGoldenXEmail(data) {
         width="100%"
         cellspacing="0"
         cellpadding="0"
-        border="0"
-        style="
-            width:100%;
-            background:#f3f4f6;
-        "
     >
         <tr>
             <td align="center">
+
+                <!--[if mso]>
+                <table
+                    role="presentation"
+                    width="640"
+                    cellspacing="0"
+                    cellpadding="0"
+                >
+                <tr>
+                <td>
+                <![endif]-->
 
                 <table
                     role="presentation"
                     width="100%"
                     cellspacing="0"
                     cellpadding="0"
-                    border="0"
                     style="
-                        width:100%;
                         max-width:640px;
-                        background:#ffffff;
+                        table-layout:fixed;
+                        background:${colors.paper};
                     "
                 >
 
                     <!-- HEADER -->
                     <tr>
                         <td
+                            class="gx-header"
                             align="center"
                             style="
-                                background:#0b2447;
-                                padding:36px 24px;
+                                background:${colors.gold};
+                                padding:52px 32px;
                             "
                         >
-                            ${logo}
-                        </td>
-                    </tr>
-
-                    <!-- GOLD ACCENT -->
-                    <tr>
-                        <td
-                            style="
-                                height:7px;
-                                background:#e6b84b;
-                                font-size:0;
-                                line-height:0;
-                            "
-                        >
-                            &nbsp;
+                            ${headerLogo}
                         </td>
                     </tr>
 
                     <!-- CONTENT -->
                     <tr>
                         <td
+                            class="gx-content"
                             style="
-                                padding:34px 32px 20px;
-                                font-size:16px;
-                                line-height:1.8;
+                                padding:42px 44px;
+                                font-size:15px;
+                                line-height:1.95;
+                                overflow-wrap:anywhere;
+                                word-wrap:break-word;
                             "
                         >
 
+                            <!-- SALUTATION -->
                             <p style="
-                                margin:0 0 24px;
-                                font-size:17px;
+                                margin:0 0 26px;
                             ">
-                                ${name} 様
+                                ${salutation}
                             </p>
 
-                            <h1 style="
-                                margin:0 0 24px;
-                                font-size:22px;
-                                line-height:1.5;
-                                font-weight:700;
-                            ">
-                                ${heading}
-                            </h1>
+                            ${heading}
 
-                            <div style="
-                                margin-bottom:26px;
-                            ">
+                            <!-- INTRODUCTION -->
+                            <div>
                                 ${body}
                             </div>
 
-                            <div style="
-                                margin:28px 0;
-                                padding:22px;
-                                background:#f8f9fb;
-                                border-left:4px solid #e6b84b;
+                            <!-- CONFIRMATION -->
+                            <h2 style="
+                                font-size:17px;
+                                margin:30px 0 20px;
                             ">
-                                <div style="
-                                    font-weight:700;
-                                    margin-bottom:10px;
-                                ">
-                                    確認事項
-                                </div>
-
-                                <div>
-                                    アカウントに必要な確認事項の詳細は、
-                                    公式ページにログインしてご確認ください。
-                                    <br><br>
-                                    第三者にパスワード、
-                                    認証コード、
-                                    ウォレット情報などを共有しないよう
-                                    お願いいたします。
-                                </div>
-                            </div>
-
-                            ${deadlineBlock}
-
-                            <p style="
-                                margin:24px 0;
-                            ">
-                                期限までにお手続きいただけない場合、
-                                一部サービスのご利用に制限がかかる場合がございます。
-                            </p>
-
-                            ${ctaBlock}
-
-                            <p style="
-                                margin:26px 0 8px;
-                            ">
-                                引き続きGolden Xを
-                                よろしくお願いいたします。
-                            </p>
-
-                            <p style="
-                                margin:0;
-                            ">
-                                Golden X チーム
-                            </p>
-
-                        </td>
-                    </tr>
-
-                    <!-- DIVIDER -->
-                    <tr>
-                        <td style="padding:10px 32px 0;">
-                            <div style="
-                                height:1px;
-                                background:#b7bcc5;
-                            "></div>
-                        </td>
-                    </tr>
-
-                    <!-- DOWNLOAD -->
-                    <tr>
-                        <td
-                            align="center"
-                            style="
-                                padding:28px 24px 10px;
-                            "
-                        >
-
-                            <div style="
-                                font-size:23px;
-                                line-height:1.5;
-                                font-weight:700;
-                                margin-bottom:14px;
-                            ">
-                                今すぐダウンロード
-                            </div>
+                                【確認事項】
+                            </h2>
 
                             <div>
-                                ${googlePlayBlock}
-                                ${appStoreBlock}
+                                ${confirmationBody}
                             </div>
 
-                            ${socialBlock}
+                            <!-- DEADLINE -->
+                            ${deadlineBlock}
 
-                        </td>
-                    </tr>
+                            <!-- CLOSING -->
+                            <div>
+                                ${closingBody}
+                            </div>
 
-                    <!-- SIGNATURE -->
-                    <tr>
-                        <td
-                            align="center"
-                            style="
-                                padding:25px 28px 15px;
+                            <!-- CTA -->
+                            <table
+                                role="presentation"
+                                align="center"
+                                cellspacing="0"
+                                cellpadding="0"
+                                style="
+                                    margin:30px auto 38px;
+                                    max-width:100%;
+                                "
+                            >
+                                <tr>
+                                    <td
+                                        align="center"
+                                        style="
+                                            background:${colors.gold};
+                                            border-radius:4px;
+                                            mso-padding-alt:16px 30px;
+                                        "
+                                    >
+                                        ${ctaBlock}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <hr style="
+                                border:0;
+                                border-top:1px solid ${colors.line};
+                                margin:0 0 30px;
+                            ">
+
+                            <!-- DOWNLOAD -->
+                            <h2 style="
+                                font-size:20px;
+                                text-align:center;
+                                margin:0 0 18px;
+                            ">
+                                今すぐダウンロード
+                            </h2>
+
+                            <table
+                                role="presentation"
+                                width="100%"
+                                cellspacing="0"
+                                cellpadding="0"
+                                style="
+                                    max-width:370px;
+                                    margin:0 auto;
+                                    table-layout:fixed;
+                                "
+                            >
+                                <tr>
+
+                                    <td
+                                        align="center"
+                                        width="50%"
+                                        style="
+                                            padding:6px 4px;
+                                            vertical-align:middle;
+                                        "
+                                    >
+                                        ${googleBadge}
+                                    </td>
+
+                                    <td
+                                        align="center"
+                                        width="50%"
+                                        style="
+                                            padding:6px 4px;
+                                            vertical-align:middle;
+                                        "
+                                    >
+                                        ${appleBadge}
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                            <!-- ABOUT -->
+                            <h2 style="
                                 font-size:14px;
-                                line-height:1.7;
-                            "
-                        >
+                                text-align:center;
+                                margin:36px 0 20px;
+                            ">
+                                Golden Xについて
+                            </h2>
 
                             ${
-                                GOLDEN_X_SYMBOL_URL
-                                    ? `
-                                        <img
-                                            src="${escapeHtml(GOLDEN_X_SYMBOL_URL)}"
-                                            alt=""
-                                            width="50"
-                                            style="
-                                                width:50px;
-                                                height:auto;
-                                                display:block;
-                                                margin:0 auto 14px;
-                                            "
-                                        >
-                                    `
+                                symbolUrl
+                                    ? img(
+                                        symbolUrl,
+                                        'Golden X シンボル',
+                                        76
+                                    )
                                     : ''
                             }
 
-                            <strong>Golden X</strong>
-                            <br>
-                            コンプライアンス担当チーム
-                            <br>
-                            ${supportEmail}
+                            <table
+                                role="presentation"
+                                align="center"
+                                cellspacing="0"
+                                cellpadding="0"
+                                style="
+                                    margin:24px auto 18px;
+                                "
+                            >
+                                <tr>
+                                    <td style="
+                                        background:${colors.gold};
+                                        padding:14px 22px;
+                                    ">
 
-                        </td>
-                    </tr>
+                                        ${
+                                            logoUrl
+                                                ? img(
+                                                    logoUrl,
+                                                    'Golden X',
+                                                    170
+                                                )
+                                                : `
+                                                    <strong
+                                                        style="
+                                                            font-size:24px;
+                                                        "
+                                                    >
+                                                        Golden X
+                                                    </strong>
+                                                `
+                                        }
 
-                    <!-- LEGAL -->
-                    <tr>
-                        <td
-                            style="
-                                padding:18px 30px 32px;
-                                font-size:11px;
-                                line-height:1.7;
-                                color:#6b7280;
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- SIGNATURE -->
+                            <p style="
                                 text-align:center;
-                            "
-                        >
-                            ${disclaimer}
+                                margin:0 0 34px;
+                            ">
+                                ${signature}
+                                <br>
+                                ${supportHtml}
+                            </p>
 
-                            ${unsubscribeBlock}
+                            <!-- FOOTER -->
+                            <div style="
+                                border-top:1px solid ${colors.line};
+                                padding-top:22px;
+                                font-size:11px;
+                                color:${colors.muted};
+                                line-height:1.9;
+                            ">
+
+                                ${disclaimer}
+
+                                <br>
+
+                                Golden X
+
+                                <p style="
+                                    text-align:center;
+                                    margin:18px 0 0;
+                                ">
+                                    ${privacy}
+                                    <br>
+                                    ${unsubscribe}
+                                </p>
+
+                            </div>
+
                         </td>
                     </tr>
 
                 </table>
+
+                <!--[if mso]>
+                </td>
+                </tr>
+                </table>
+                <![endif]-->
 
             </td>
         </tr>
@@ -692,6 +905,7 @@ app.post(
                         <head>
                             <meta charset="utf-8">
                         </head>
+
                         <body style="
                             font-family:Arial,sans-serif;
                             padding:32px;
@@ -721,8 +935,10 @@ app.post(
 
                 return res.status(502).json({
                     success: false,
-                    error: 'Falha no envio pelo provedor',
-                    details: result.error
+                    error:
+                        'Falha no envio pelo provedor',
+                    details:
+                        result.error
                 });
             }
 
@@ -757,7 +973,7 @@ app.post(
 );
 
 /* =========================================================
-   GOLDEN X CAMPAIGN TEST
+   GOLDEN X CAMPAIGN TEST V2
 
    SOMENTE 1 DESTINATÁRIO POR REQUISIÇÃO.
    NÃO É ENDPOINT DE DISPARO EM MASSA.
@@ -771,7 +987,8 @@ app.post(
             if (!resend) {
                 return res.status(503).json({
                     success: false,
-                    error: 'RESEND_API_KEY não configurada'
+                    error:
+                        'RESEND_API_KEY não configurada'
                 });
             }
 
@@ -795,6 +1012,10 @@ app.post(
                     .trim()
                     .slice(0, 200);
 
+            /*
+             * Structured data only.
+             * Browser does NOT send arbitrary email HTML.
+             */
             const templateData = {
                 name:
                     req.body?.name,
@@ -833,17 +1054,51 @@ app.post(
                     req.body?.disclaimer,
 
                 unsubscribe_url:
-                    req.body?.unsubscribe_url
+                    req.body?.unsubscribe_url,
+
+                /*
+                 * Golden X v2
+                 */
+                template_key:
+                    req.body?.template_key,
+
+                salutation:
+                    req.body?.salutation,
+
+                confirmation_body:
+                    req.body?.confirmation_body,
+
+                closing_body:
+                    req.body?.closing_body,
+
+                logo_url:
+                    req.body?.logo_url,
+
+                symbol_url:
+                    req.body?.symbol_url,
+
+                signature:
+                    req.body?.signature,
+
+                privacy_url:
+                    req.body?.privacy_url
             };
 
             const html =
-                buildGoldenXEmail(templateData);
+                buildGoldenXEmail(
+                    templateData
+                );
 
             const result =
                 await resend.emails.send({
-                    from: FROM_EMAIL,
-                    to: [email],
+                    from:
+                        FROM_EMAIL,
+
+                    to:
+                        [email],
+
                     subject,
+
                     html
                 });
 
@@ -867,8 +1122,13 @@ app.post(
                 {
                     message_id:
                         result.data?.id || null,
+
                     recipient:
-                        email
+                        email,
+
+                    template:
+                        templateData.template_key ||
+                        'legacy'
                 }
             );
 
@@ -876,6 +1136,7 @@ app.post(
                 success: true,
                 message:
                     'Golden X test email sent',
+
                 message_id:
                     result.data?.id || null
             });
