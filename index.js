@@ -952,7 +952,7 @@ function buildBinanceJapanFullPreview(data = {}) {
 <body style="margin:0;padding:0;background:#eee;color:#181a20;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#fff;">
-<tr><td align="center" style="background:#f0b90b;padding:42px 20px 40px;"><img
+<tr><td align="center" style="background:#F8C30A;padding:42px 20px 40px;"><img
 src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/1bdab81e-8620-4e5b-9c35-237a604609cf/binance-logo-black.png"
 alt="Binance"
 width="200"
