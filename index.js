@@ -981,11 +981,44 @@ style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 au
 </table></td></tr></table></body></html>`;
 }
 
+
+function buildBitbankHardforkPreview(data = {}) {
+ const logo=escapeHtml(data.logo_url||'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/078b209c-f95f-402b-9d33-c5310c9f60fb/bitbank-hardfork-logo.png');
+ const banner=escapeHtml(data.banner_url||'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/6b2ab295-9ef7-47b9-8ef3-b0e9d733bda2/bitbank-hardfork-banner.png');
+ const body=textToHtml(data.body||'いつもビットバンクをご利用いただきありがとうございます。');
+ const network=escapeHtml(data.network_name||'Bitcoin');
+ const asset=escapeHtml(data.asset_name||'ビットコイン（BTC）');
+ const stop=textToHtml(data.suspension_start||'2026年10月30日（金）17:00頃');
+ const resume=textToHtml(data.resumption_time||'2026年11月2日（月）19:00頃');
+ const stopNote=textToHtml(data.suspension_note||'上記暗号資産の入出金以外の全てのサービスは通常どおりご利用いただけます。');
+ const resumeNote=textToHtml(data.resumption_note||'ハードフォーク完了後、システムの安定稼働を確認次第、入出金を再開いたします。');
+ const closing=textToHtml(data.closing_text||'今後ともビットバンクをよろしくお願いいたします。');
+ const footer=textToHtml(data.footer_notice||'当メールは大切なお知らせの為、ユーザ全員に送付しています。予めご了承ください。');
+ return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#fff;color:#4a4a4a;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:505px;background:#fff;">
+<tr><td align="center" style="padding:14px 0 15px;"><img src="${logo}" alt="bitbank" width="163" style="display:block;width:163px;max-width:100%;height:auto;border:0;margin:0 auto;"></td></tr>
+<tr><td align="center" style="background:#fff7d6;padding:5px;font-size:9px;font-weight:700;color:#6b5900;">INTERNAL DESIGN PREVIEW</td></tr>
+<tr><td><img src="${banner}" alt="" width="504" style="display:block;width:100%;max-width:504px;height:auto;border:0;margin:0 auto;"></td></tr>
+<tr><td style="padding-top:17px;font-size:13px;line-height:1.75;color:#555;">${body}</td></tr>
+<tr><td style="padding-top:12px;"><table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:12px;color:#444;"><tr><td style="border:1px solid #555;padding:3px 5px;font-weight:700;">対象ネットワーク名</td><td style="border:1px solid #555;padding:3px 5px;font-weight:700;">暗号資産名（ティッカー名）</td></tr><tr><td style="border:1px solid #555;padding:3px 5px;">${network}</td><td style="border:1px solid #555;padding:3px 5px;">${asset}</td></tr></table></td></tr>
+<tr><td style="padding-top:12px;font-size:17px;font-weight:700;">入出金の停止期間について</td></tr>
+<tr><td style="padding:7px 0 0 30px;font-size:13px;line-height:1.75;"><ul style="margin:0;padding-left:18px;"><li>入出金の停止予定日時<ul><li>${stop}</li></ul></li><li>入出金の再開予定日時<ul><li>${resume}</li></ul></li></ul></td></tr>
+<tr><td style="padding-top:12px;font-size:13px;line-height:1.75;">${stopNote}</td></tr>
+<tr><td style="padding-top:11px;font-size:17px;font-weight:700;">入出金の再開について</td></tr>
+<tr><td style="padding-top:7px;font-size:13px;line-height:1.75;">${resumeNote}</td></tr>
+<tr><td style="padding-top:9px;font-size:13px;line-height:1.75;">${closing}</td></tr>
+<tr><td style="padding-top:17px;"><div style="border-top:1px solid #777;">&nbsp;</div></td></tr>
+<tr><td style="padding:12px 0 22px;font-size:11px;line-height:1.75;color:#666;">${footer}</td></tr>
+</table></td></tr></table></body></html>`;
+}
+
 function selectCampaignTemplate(templateData) {
-    const key = String(templateData?.template_key || '').trim();
-    if (key === 'binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
-    if (key === 'binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
-    return buildGoldenXEmail(templateData);
+ const key=String(templateData?.template_key||'').trim();
+ if(key==='binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
+ if(key==='binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
+ if(key==='bitbank_hardfork_preview_v1') return buildBitbankHardforkPreview(templateData);
+ return buildGoldenXEmail(templateData);
 }
 
 /* =========================================================
@@ -1262,7 +1295,18 @@ app.post(
                     req.body?.privacy_notice,
 
                 legal_footer:
-                    req.body?.legal_footer
+                    req.body?.legal_footer,
+
+                network_name: req.body?.network_name,
+                asset_name: req.body?.asset_name,
+                suspension_start: req.body?.suspension_start,
+                resumption_time: req.body?.resumption_time,
+                suspension_note: req.body?.suspension_note,
+                resumption_note: req.body?.resumption_note,
+                closing_text: req.body?.closing_text,
+                footer_notice: req.body?.footer_notice,
+                informational_link_text: req.body?.informational_link_text,
+                banner_url: req.body?.banner_url
             };
 
             const html =
