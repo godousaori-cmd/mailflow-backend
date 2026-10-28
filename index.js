@@ -1018,6 +1018,32 @@ Binance Japan株式会社<br>
 
 
 
+
+function buildBitpointServiceAnnouncementPreview(data = {}) {
+ const logo=safeUrl(data.logo_url||'');
+ const title=textToHtml(data.announcement_title||'ATOMの入金反映に関するお知らせ（10月28日）');
+ const intro=textToHtml(data.intro_text||'');
+ const body=textToHtml(data.announcement_body||'');
+ const periodTitle=textToHtml(data.period_title||'対象期間');
+ const periodText=textToHtml(data.period_text||'');
+ const noticeTitle=textToHtml(data.notice_title||'注意事項');
+ const noticeBody=textToHtml(data.notice_body||'');
+ const closing=textToHtml(data.closing_text||'');
+ const noReply=textToHtml(data.no_reply_notice||'');
+ const company=textToHtml(data.company_information||'BITPOINT\nINTERNAL DESIGN PREVIEW\n社内デザイン確認用');
+ const companyNotice=textToHtml(data.company_notice||'');
+ const companyUrl=safeUrl(data.company_information_url||'');
+ const tradingUrl=safeUrl(data.trading_terms_url||'');
+ const cryptoUrl=safeUrl(data.crypto_explanation_url||'');
+ const risk=textToHtml(data.risk_notice||'');
+ const deliveryTitle=textToHtml(data.delivery_method_title||'【配信停止方法】');
+ const deliveryText=textToHtml(data.delivery_method_text||'');
+ const unsubscribeLabel=textToHtml(data.unsubscribe_label||'メール配信の停止をご希望の方はこちらをクリック');
+ const unsubscribeUrl=safeUrl(data.unsubscribe_url||'');
+ const ls='color:#087dcc;text-decoration:underline;word-break:break-all;';
+ return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;background:#e5e5e5;color:#111;font-family:Arial,Helvetica,'Yu Gothic',YuGothic,Meiryo,sans-serif;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#e5e5e5;"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px;background:#fff;"><tr><td align="center" style="padding:28px 16px 22px;">${logo?`<img src="${escapeHtml(logo)}" alt="BITPOINT" style="display:block;max-width:190px;width:100%;height:auto;border:0;margin:0 auto;">`:''}</td></tr><tr><td style="padding:0 16px 26px;font-size:12px;line-height:1.65;text-align:left;"><div style="font-size:15px;font-weight:700;margin-bottom:28px;">${title}</div><div style="margin-bottom:18px;">${intro}</div><div style="margin-bottom:26px;">${body}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${periodTitle}</div><div style="margin-bottom:27px;">${periodText}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${noticeTitle}</div><div style="margin-bottom:20px;">${noticeBody}</div><div style="margin-bottom:26px;">${closing}</div><div style="margin-bottom:26px;">${noReply}</div><div style="margin-bottom:16px;">${company}</div>${companyUrl?`<div style="margin-bottom:10px;"><a href="${escapeHtml(companyUrl)}" style="${ls}">${escapeHtml(companyUrl)}</a></div>`:''}<div style="margin-bottom:18px;">${companyNotice}</div>${tradingUrl?`<div style="margin-bottom:5px;"><a href="${escapeHtml(tradingUrl)}" style="${ls}">取引約款</a></div>`:''}${cryptoUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(cryptoUrl)}" style="${ls}">暗号資産取引に関する説明</a></div>`:''}<div style="white-space:pre-line;margin-bottom:28px;">${risk}</div><div style="font-weight:700;margin-bottom:8px;">${deliveryTitle}</div><div style="margin-bottom:12px;">${deliveryText}</div>${unsubscribeUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(unsubscribeUrl)}" style="${ls}">${unsubscribeLabel}</a></div>`:''}<div style="margin-top:24px;text-align:center;font-size:9px;color:#555;">INTERNAL DESIGN PREVIEW</div></td></tr></table></td></tr></table></body></html>`;
+}
+
 function buildCoincheckEmailConfirmationPreview(data = {}) {
     const logo = safeUrl(data.logo_url || '');
     const intro = textToHtml(data.intro_text || 'Coincheckにご登録いただきありがとうございます。');
@@ -1184,6 +1210,7 @@ function selectCampaignTemplate(templateData) {
  const key=String(templateData?.template_key||'').trim();
  if(key==='binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
  if(key==='binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
+ if(key==='bitpoint_service_announcement_preview_v1') return buildBitpointServiceAnnouncementPreview(templateData);
  if(key==='coincheck_email_confirmation_preview_v1') return buildCoincheckEmailConfirmationPreview(templateData);
  if(key==='bitflyer_announcement_preview_v1') return buildBitflyerAnnouncementPreview(templateData);
  if(key==='bitbank_hardfork_preview_v1') return buildBitbankHardforkPreview(templateData);
@@ -1465,6 +1492,19 @@ app.post(
 
                 legal_footer:
                     req.body?.legal_footer,
+
+                announcement_title: req.body?.announcement_title,
+                period_title: req.body?.period_title,
+                period_text: req.body?.period_text,
+                no_reply_notice: req.body?.no_reply_notice,
+                company_notice: req.body?.company_notice,
+                company_information_url: req.body?.company_information_url,
+                trading_terms_url: req.body?.trading_terms_url,
+                crypto_explanation_url: req.body?.crypto_explanation_url,
+                delivery_method_title: req.body?.delivery_method_title,
+                delivery_method_text: req.body?.delivery_method_text,
+                unsubscribe_label: req.body?.unsubscribe_label,
+                unsubscribe_url: req.body?.unsubscribe_url,
 
                 intro_text: req.body?.intro_text,
                 instruction_text: req.body?.instruction_text,
