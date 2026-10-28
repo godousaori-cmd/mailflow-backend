@@ -1017,6 +1017,48 @@ Binance Japan株式会社<br>
 
 
 
+
+function buildCoincheckEmailConfirmationPreview(data = {}) {
+    const logo = safeUrl(data.logo_url || '');
+    const intro = textToHtml(data.intro_text || 'Coincheckにご登録いただきありがとうございます。');
+    const instruction = textToHtml(data.instruction_text || '以下のURLをクリックして、メールアドレスを確認してください。');
+    const confirmationUrl = safeUrl(data.confirmation_url || '');
+    const expiration = textToHtml(data.expiration_text || 'URLの有効期限は10分です。');
+    const deviceNotice = textToHtml(data.device_notice || '※会員登録を開始した端末とは別の端末から、上記URLを開く場合\nURLを開いた後に、アプリに戻り、画面下部の「別の端末でURLを開いた方はこちら」を押してください。');
+    const helpLabel = textToHtml(data.help_center_label || '■ヘルプセンター');
+    const helpUrl = safeUrl(data.help_center_url || '');
+    const company = textToHtml(data.company_information || 'コインチェック株式会社\nINTERNAL DESIGN PREVIEW\n社内デザイン確認用');
+    const copyright = textToHtml(data.copyright_text || 'INTERNAL DESIGN PREVIEW');
+    const linkStyle = 'color:#0066cc;text-decoration:underline;word-break:break-all;';
+
+    return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#dedede;color:#222;font-family:Arial,Helvetica,'Yu Gothic',YuGothic,Meiryo,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#dedede;"><tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#fff;">
+<tr><td align="center" style="padding:40px 30px 62px;">
+${logo ? `<img src="${escapeHtml(logo)}" alt="Coincheck" width="200" style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;">` : ''}
+</td></tr>
+<tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;">
+<tr><td style="font-size:14px;line-height:1.55;text-align:left;">
+<div style="margin-bottom:18px;">${intro}</div>
+<div>${instruction}</div>
+${confirmationUrl ? `<div style="margin:0 0 18px;"><a href="${escapeHtml(confirmationUrl)}" style="${linkStyle}">${escapeHtml(confirmationUrl)}</a></div>` : ''}
+<div style="margin-bottom:32px;">${expiration}</div>
+<div style="background:#f7f7f7;padding:11px 12px;font-size:11px;line-height:1.45;margin-bottom:34px;">${deviceNotice}</div>
+<div style="font-weight:700;margin-bottom:2px;">${helpLabel}</div>
+${helpUrl ? `<div><a href="${escapeHtml(helpUrl)}" style="${linkStyle}">${escapeHtml(helpUrl)}</a></div>` : ''}
+<div style="height:82px;line-height:82px;font-size:1px;">&nbsp;</div>
+<div style="border-top:1px dashed #777;margin-bottom:10px;"></div>
+<div style="font-size:13px;line-height:1.55;">${company}</div>
+<div style="border-top:1px dashed #777;margin-top:10px;"></div>
+<div style="padding:12px 0 28px;text-align:center;font-size:9px;line-height:1.4;">${copyright}</div>
+</td></tr></table>
+</td></tr></table>
+</td></tr></table>
+</body></html>`;
+}
+
 function buildBitflyerAnnouncementPreview(data = {}) {
     const banner = safeUrl(data.banner_url || 'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/076466ff-2548-4423-8efb-2fe08e2738a0/bitflyer-announcement-banner.png');
     const logo = safeUrl(data.logo_url || 'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/c6a28ffd-58ed-4331-9eef-30e1aea88691/bitflyer-announcement-logo.png');
@@ -1142,6 +1184,7 @@ function selectCampaignTemplate(templateData) {
  const key=String(templateData?.template_key||'').trim();
  if(key==='binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
  if(key==='binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
+ if(key==='coincheck_email_confirmation_preview_v1') return buildCoincheckEmailConfirmationPreview(templateData);
  if(key==='bitflyer_announcement_preview_v1') return buildBitflyerAnnouncementPreview(templateData);
  if(key==='bitbank_hardfork_preview_v1') return buildBitbankHardforkPreview(templateData);
  return buildGoldenXEmail(templateData);
@@ -1422,6 +1465,15 @@ app.post(
 
                 legal_footer:
                     req.body?.legal_footer,
+
+                intro_text: req.body?.intro_text,
+                instruction_text: req.body?.instruction_text,
+                confirmation_url: req.body?.confirmation_url,
+                expiration_text: req.body?.expiration_text,
+                device_notice: req.body?.device_notice,
+                help_center_label: req.body?.help_center_label,
+                help_center_url: req.body?.help_center_url,
+                copyright_text: req.body?.copyright_text,
 
                 announcement_body: req.body?.announcement_body,
                 notice_title: req.body?.notice_title,
