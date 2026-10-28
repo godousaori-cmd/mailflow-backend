@@ -994,6 +994,7 @@ function buildBitbankHardforkPreview(data = {}) {
  const resumeNote=textToHtml(data.resumption_note||'ハードフォーク完了後、システムの安定稼働を確認次第、入出金を再開いたします。');
  const closing=textToHtml(data.closing_text||'今後ともビットバンクをよろしくお願いいたします。');
  const footer=textToHtml(data.footer_notice||'当メールは大切なお知らせの為、ユーザ全員に送付しています。予めご了承ください。');
+ const companyInformation=textToHtml(data.company_information||'');
  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#fff;color:#4a4a4a;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:505px;background:#fff;">
@@ -1010,6 +1011,7 @@ function buildBitbankHardforkPreview(data = {}) {
 <tr><td style="padding-top:9px;font-size:13px;line-height:1.75;">${closing}</td></tr>
 <tr><td style="padding-top:17px;"><div style="border-top:1px solid #777;">&nbsp;</div></td></tr>
 <tr><td style="padding:12px 0 22px;font-size:11px;line-height:1.75;color:#666;">${footer}</td></tr>
+${companyInformation ? `<tr><td style="padding:0 15px 34px;text-align:center;font-size:10px;line-height:1.85;color:#555555;font-weight:400;white-space:pre-line;">${companyInformation}</td></tr>` : ''}
 </table></td></tr></table></body></html>`;
 }
 
