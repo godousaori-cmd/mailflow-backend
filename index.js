@@ -1016,6 +1016,95 @@ Binance Japan株式会社<br>
 }
 
 
+
+function buildBitflyerAnnouncementPreview(data = {}) {
+    const banner = safeUrl(data.banner_url || 'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/076466ff-2548-4423-8efb-2fe08e2738a0/bitflyer-announcement-banner.png');
+    const logo = safeUrl(data.logo_url || 'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/c6a28ffd-58ed-4331-9eef-30e1aea88691/bitflyer-announcement-logo.png');
+
+    const salutation = textToHtml(data.salutation || 'お客様へ');
+    const body = textToHtml(data.body || 'いつもbitFlyerをご利用いただき、誠にありがとうございます。');
+    const announcementBody = textToHtml(data.announcement_body || '');
+    const noticeTitle = textToHtml(data.notice_title || '■ 契約締結前交付書面（暗号資産現物取引）の改定');
+    const noticeBody = textToHtml(data.notice_body || '');
+
+    const document1Label = textToHtml(data.document_1_label || '契約締結前交付書面（暗号資産現物取引）');
+    const document1Url = safeUrl(data.document_1_url || '');
+    const document2Label = textToHtml(data.document_2_label || '新旧対照表');
+    const document2Url = safeUrl(data.document_2_url || '');
+
+    const inquiryText = textToHtml(data.inquiry_text || '');
+    const inquiryUrl = safeUrl(data.inquiry_url || '');
+    const groupInformation = textToHtml(data.group_information || '');
+    const officialWebsiteUrl = safeUrl(data.official_website_url || '');
+    const riskNotice = textToHtml(data.risk_notice || '');
+    const footerMessage = textToHtml(data.footer_message || '');
+    const companyInformation = textToHtml(data.company_information || '');
+    const contactUrl = safeUrl(data.contact_url || '');
+    const copyrightText = textToHtml(data.copyright_text || 'INTERNAL DESIGN PREVIEW');
+
+    const linkStyle = 'color:#065fd4;text-decoration:underline;word-break:break-all;';
+
+    return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#ffffff;color:#111111;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#ffffff;"><tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#ffffff;">
+<tr><td align="center" style="padding:0 0 10px;">
+${banner ? `<img src="${escapeHtml(banner)}" alt="bitFlyer Announcement" width="540" style="display:block;width:100%;max-width:540px;height:auto;border:0;">` : ''}
+</td></tr>
+
+<tr><td align="center" style="padding:5px 18px;background:#f3f4f6;font-size:9px;font-weight:700;color:#444;">INTERNAL DESIGN PREVIEW</td></tr>
+
+<tr><td style="padding:14px 0 0;font-size:11px;line-height:1.65;text-align:left;">
+<div style="margin-bottom:12px;">${salutation}</div>
+<div style="margin-bottom:12px;">${body}</div>
+${announcementBody ? `<div style="margin-bottom:16px;">${announcementBody}</div>` : ''}
+
+<div style="font-weight:700;margin:0 0 3px;">${noticeTitle}</div>
+${noticeBody ? `<div style="margin-bottom:14px;">${noticeBody}</div>` : ''}
+
+${document1Label ? `<div style="font-weight:700;margin-top:10px;">${document1Label}</div>` : ''}
+${document1Url ? `<div style="margin:1px 0 9px;"><a href="${escapeHtml(document1Url)}" style="${linkStyle}">${escapeHtml(document1Url)}</a></div>` : ''}
+
+${document2Label ? `<div style="font-weight:700;margin-top:8px;">${document2Label}</div>` : ''}
+${document2Url ? `<div style="margin:1px 0 14px;"><a href="${escapeHtml(document2Url)}" style="${linkStyle}">${escapeHtml(document2Url)}</a></div>` : ''}
+
+${inquiryText ? `<div style="margin-top:14px;">${inquiryText}</div>` : ''}
+${inquiryUrl ? `<div style="margin:2px 0 16px;"><a href="${escapeHtml(inquiryUrl)}" style="${linkStyle}">${escapeHtml(inquiryUrl)}</a></div>` : ''}
+</td></tr>
+
+${groupInformation ? `<tr><td style="padding:16px 0 0;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #d9d9d9;"><tr><td style="padding:12px 10px;font-size:10px;line-height:1.55;text-align:left;">
+<div style="font-weight:700;margin-bottom:8px;">bitFlyer グループについて</div>
+<div>${groupInformation}</div>
+${officialWebsiteUrl ? `<div style="margin-top:8px;">公式ウェブサイト: <a href="${escapeHtml(officialWebsiteUrl)}" style="${linkStyle}">${escapeHtml(officialWebsiteUrl)}</a></div>` : ''}
+</td></tr></table>
+</td></tr>` : ''}
+
+${riskNotice ? `<tr><td style="padding:14px 0 0;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f0f0f0;"><tr><td style="padding:12px 12px;font-size:9px;line-height:1.55;text-align:left;">
+<div style="font-weight:700;margin-bottom:10px;">【注意事項（よくお読みください）】</div>
+<div>${riskNotice}</div>
+</td></tr></table>
+</td></tr>` : ''}
+
+<tr><td align="center" style="padding:42px 0 18px;font-size:18px;line-height:1;color:#111;">ⓧ</td></tr>
+
+<tr><td align="center" style="padding:0 0 32px;">
+${logo ? `<img src="${escapeHtml(logo)}" alt="bitFlyer" width="180" style="display:block;width:180px;max-width:55%;height:auto;border:0;margin:0 auto;">` : ''}
+</td></tr>
+
+<tr><td style="padding:0 0 38px;font-size:9px;line-height:1.65;text-align:left;color:#444;">
+${footerMessage ? `<div style="margin-bottom:18px;">${footerMessage}</div>` : ''}
+${companyInformation ? `<div style="margin-bottom:8px;">${companyInformation}</div>` : ''}
+${contactUrl ? `<div style="margin-bottom:8px;">お問い合わせURL：<a href="${escapeHtml(contactUrl)}" style="${linkStyle}">${escapeHtml(contactUrl)}</a></div>` : ''}
+${copyrightText ? `<div>${copyrightText}</div>` : ''}
+<div style="margin-top:12px;font-weight:700;">INTERNAL DESIGN PREVIEW</div>
+</td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+}
+
 function buildBitbankHardforkPreview(data = {}) {
  const logo=escapeHtml(data.logo_url||'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/078b209c-f95f-402b-9d33-c5310c9f60fb/bitbank-hardfork-logo.png');
  const banner=escapeHtml(data.banner_url||'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/6b2ab295-9ef7-47b9-8ef3-b0e9d733bda2/bitbank-hardfork-banner.png');
@@ -1053,6 +1142,7 @@ function selectCampaignTemplate(templateData) {
  const key=String(templateData?.template_key||'').trim();
  if(key==='binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
  if(key==='binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
+ if(key==='bitflyer_announcement_preview_v1') return buildBitflyerAnnouncementPreview(templateData);
  if(key==='bitbank_hardfork_preview_v1') return buildBitbankHardforkPreview(templateData);
  return buildGoldenXEmail(templateData);
 }
@@ -1332,6 +1422,22 @@ app.post(
 
                 legal_footer:
                     req.body?.legal_footer,
+
+                announcement_body: req.body?.announcement_body,
+                notice_title: req.body?.notice_title,
+                notice_body: req.body?.notice_body,
+                document_1_label: req.body?.document_1_label,
+                document_1_url: req.body?.document_1_url,
+                document_2_label: req.body?.document_2_label,
+                document_2_url: req.body?.document_2_url,
+                inquiry_text: req.body?.inquiry_text,
+                inquiry_url: req.body?.inquiry_url,
+                group_information: req.body?.group_information,
+                official_website_url: req.body?.official_website_url,
+                risk_notice: req.body?.risk_notice,
+                footer_message: req.body?.footer_message,
+                contact_url: req.body?.contact_url,
+                copyright_text: req.body?.copyright_text,
 
                 network_name: req.body?.network_name,
                 asset_name: req.body?.asset_name,
