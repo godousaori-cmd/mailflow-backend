@@ -942,16 +942,20 @@ function buildBinanceJapanFullPreview(data = {}) {
     const maintenance = textToHtml(data.maintenance || '10月9日(金)15:00 ～ 10月13日(火) 8:00');
     const methods = textToHtml(data.methods || 'PayPayマネー\nGMOあおぞらネット銀行');
     const code = escapeHtml(data.anti_phishing_code || 'INTERNAL PREVIEW');
-    const risk = textToHtml(data.risk_notes || '1. 暗号資産の取引には価格変動リスクがあります。\n2. ご利用前にサービス内容をご確認ください。\n3. 不審なリンクやメールには十分ご注意ください。');
+    const security = textToHtml(data.security_notice || 'フィッシング対策コードをご確認ください。');
+    const risk = textToHtml(data.risk_notes || '暗号資産の取引には価格変動リスクがあります。\nご利用前にサービス内容をご確認ください。');
+    const legal = textToHtml(data.legal_footer || '注意事項をご確認のうえ、サービスをご利用ください。');
     const company = textToHtml(data.company_information || 'INTERNAL DESIGN PREVIEW\n社内デザイン確認用テンプレート');
-    const security = textToHtml(data.security_notice || '注意: パスワード、認証コードなどの機密情報をメールで送信しないでください。');
     const privacy = textToHtml(data.privacy_notice || 'プライバシーに関するご案内');
-    const legal = textToHtml(data.legal_footer || 'INTERNAL DESIGN PREVIEW\nFor internal layout review only.');
+    const privacyUrl = safeUrl(data.privacy_url || '');
+    const privacyLink = privacyUrl
+        ? `<div style="margin-top:6px;"><a href="${escapeHtml(privacyUrl)}" style="color:#181a20;text-decoration:underline;">プライバシーポリシー</a></div>`
+        : '';
 
     return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#eee;color:#181a20;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:540px;background:#fff;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:505px;background:#fff;">
 <tr><td align="center" style="background:#F8C30A;padding:42px 20px 40px;"><img
 src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/1bdab81e-8620-4e5b-9c35-237a604609cf/binance-logo-black.png"
 alt="Binance"
@@ -963,21 +967,35 @@ style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 au
 <div style="text-align:center;font-weight:700;font-size:15px;margin:24px 0 12px;">【メンテナンス予定】</div><div style="margin-left:31px;">• ${maintenance}</div>
 <div style="text-align:center;font-weight:700;font-size:15px;margin:25px 0 13px;">【上記メンテナンス期間中もご利用可能な入出金方法】</div><div style="margin-left:31px;line-height:1.55;">• ${methods.replace(/<br>/g,'<br>• ')}</div>
 <p style="margin:30px 0 0;">引き続きBinance Japanをよろしくお願いいたします。</p><p style="margin:17px 0 0;">Binance Japan チーム</p></td></tr>
+
 <tr><td style="padding:42px 29px 0;"><div style="border-top:1px solid #181a20;">&nbsp;</div></td></tr>
 <tr><td align="center" style="padding:12px;font-size:21px;font-weight:700;">今すぐダウンロード</td></tr>
-<tr><td style="padding:0 31px 22px;"><table role="presentation" width="100%"><tr>
-<td width="50%" align="center"><img src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/20727a23-53f6-460c-9a20-8114852f3d26/google-play-ja.png" alt="Google Play" width="184" style="display:block;max-width:100%;height:auto;border:0;"></td>
-<td width="50%" align="center"><img src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/890eb7f3-d040-42e2-a2cc-05b7ad9a5a5d/app-store-ja.png" alt="App Store" width="148" style="display:block;max-width:100%;height:auto;border:0;"></td>
+<tr><td style="padding:0 31px 22px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
+<td width="50%" align="center" style="padding-right:5px;"><img src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/20727a23-53f6-460c-9a20-8114852f3d26/google-play-ja.png" alt="Google Play" width="184" style="display:block;max-width:100%;height:auto;border:0;"></td>
+<td width="50%" align="center" style="padding-left:5px;"><img src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/890eb7f3-d040-42e2-a2cc-05b7ad9a5a5d/app-store-ja.png" alt="App Store" width="148" style="display:block;max-width:100%;height:auto;border:0;"></td>
 </tr></table></td></tr>
+
 <tr><td style="padding:0 29px;"><div style="border-top:1px solid #181a20;">&nbsp;</div></td></tr>
 <tr><td align="center" style="padding:12px 20px 18px;font-size:20px;font-weight:700;">最新情報をお見逃しなく！</td></tr>
-<tr><td style="padding:0 29px 18px;font-size:9px;line-height:1.55;">フィッシング対策コードをご確認ください。<div style="text-align:right;margin-top:8px;"><span style="background:#f0b90b;padding:4px 8px;">Anti-phishing</span><span style="background:#eee;padding:4px 8px;">${code}</span></div></td></tr>
-<tr><td style="padding:0 29px 14px;font-size:8px;line-height:1.6;"><strong>リスク警告:</strong><br>暗号資産の取引は市場リスクを伴います。サービス内容とリスクをご確認のうえご利用ください。</td></tr>
-<tr><td style="padding:0 29px 14px;font-size:8px;line-height:1.6;"><strong>注意事項:</strong><br>${risk}</td></tr>
-<tr><td style="padding:0 29px 14px;font-size:8px;line-height:1.6;">${company}</td></tr>
-<tr><td style="padding:0 29px 14px;font-size:8px;line-height:1.6;"><strong>注意:</strong><br>${security}</td></tr>
-<tr><td align="center" style="padding:0 29px 22px;font-size:8px;line-height:1.6;">${privacy}</td></tr>
-<tr><td align="center" style="background:#0b0e11;color:#fff;padding:26px 24px;font-size:8px;line-height:1.7;">${legal}<br><br><strong>INTERNAL DESIGN PREVIEW</strong></td></tr>
+
+<tr><td style="padding:0 29px 18px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr>
+<td style="font-size:9px;line-height:1.55;vertical-align:top;padding-right:10px;">${security}</td>
+<td align="right" style="white-space:nowrap;vertical-align:top;font-size:8px;">
+<span style="background:#f0b90b;padding:4px 8px;">Anti-phishing</span><span style="background:#eee;padding:4px 8px;">${code}</span>
+</td>
+</tr></table>
+</td></tr>
+
+${risk ? `<tr><td style="padding:0 29px 14px;font-size:9px;line-height:1.55;color:#222;">${risk}</td></tr>` : ''}
+${legal ? `<tr><td style="padding:0 29px 14px;font-size:9px;line-height:1.55;color:#222;text-align:left;">${legal}</td></tr>` : ''}
+${company ? `<tr><td style="padding:0 29px 14px;font-size:10px;line-height:1.65;color:#222;text-align:left;">${company}</td></tr>` : ''}
+${privacy ? `<tr><td style="padding:0 29px 22px;font-size:9px;line-height:1.6;color:#222;text-align:left;">${privacy}${privacyLink}</td></tr>` : privacyLink ? `<tr><td style="padding:0 29px 22px;font-size:9px;line-height:1.6;color:#222;text-align:left;">${privacyLink}</td></tr>` : ''}
+
+<tr><td align="center" style="background:#0b0e11;color:#fff;padding:26px 24px;font-size:8px;line-height:1.7;">
+<strong>INTERNAL DESIGN PREVIEW</strong><br>
+社内デザイン確認用テンプレート
+</td></tr>
 </table></td></tr></table></body></html>`;
 }
 
