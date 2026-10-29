@@ -867,10 +867,6 @@ function buildBinanceJapanMaintenancePreview(data = {}) {
 <div style="font-size:29px;line-height:1;font-weight:700;letter-spacing:1px;color:#181a20;">◈ BINANCE</div>
 </td></tr>
 
-<tr><td align="center" style="background:#fff7d6;padding:6px 15px;font-size:9px;line-height:1.3;color:#6b5900;">
-INTERNAL DESIGN PREVIEW
-</td></tr>
-
 <tr><td style="padding:21px 29px 0;font-size:14px;line-height:1.45;color:#181a20;">
 <div>${intro}</div>
 
@@ -945,7 +941,7 @@ function buildBinanceJapanFullPreview(data = {}) {
     const security = textToHtml(data.security_notice || '高い安全性を保つため、こちらからフィッシング対策コードを設定してください。');
     const risk = textToHtml(data.risk_notes || '暗号資産の取引は、高い市場リスクを伴います。サービス内容とリスクをご確認のうえご利用ください。');
     const legal = textToHtml(data.legal_footer || '1. 暗号資産は、法定通貨ではありません。\n2. 暗号資産には価格変動リスクがあります。\n3. サービス内容をご確認のうえご利用ください。');
-    const company = textToHtml(data.company_information || 'Binance Japan株式会社\nINTERNAL DESIGN PREVIEW');
+    const company = textToHtml(data.company_information || 'Binance Japan株式会社');
     const privacy = textToHtml(data.privacy_notice || '当社の個人情報の取扱い方針の詳細については、プライバシーポリシーをご覧ください。');
     const privacyUrl = safeUrl(data.privacy_url || '');
 
@@ -965,8 +961,6 @@ function buildBinanceJapanFullPreview(data = {}) {
 src="https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/1bdab81e-8620-4e5b-9c35-237a604609cf/binance-logo-black.png"
 alt="Binance" width="200"
 style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;"></td></tr>
-<tr><td align="center" style="background:#fff7d6;padding:7px 15px;font-size:10px;font-weight:700;color:#6b5900;">INTERNAL DESIGN PREVIEW</td></tr>
-
 <tr><td style="padding:24px 29px 0;font-size:14px;line-height:1.45;">${body}
 <div style="text-align:center;font-weight:700;font-size:15px;margin:24px 0 12px;">【メンテナンス予定】</div>
 <div style="margin-left:31px;">• ${maintenance}</div>
@@ -1010,7 +1004,6 @@ ${privacyHtml ? `<tr><td style="padding:0 28px 20px;font-size:8px;line-height:1.
 Binance Japan株式会社<br>
 暗号資産交換業者 関東財務局長 第０００３１号<br>
 一般社団法人 日本暗号資産取引業協会会員<br><br>
-<strong>INTERNAL DESIGN PREVIEW</strong>
 </td></tr>
 </table></td></tr></table></body></html>`;
 }
@@ -1030,7 +1023,7 @@ function buildBitpointServiceAnnouncementPreview(data = {}) {
  const noticeBody=textToHtml(data.notice_body||'');
  const closing=textToHtml(data.closing_text||'');
  const noReply=textToHtml(data.no_reply_notice||'');
- const company=textToHtml(data.company_information||'BITPOINT\nINTERNAL DESIGN PREVIEW\n社内デザイン確認用');
+ const company=textToHtml(data.company_information||'BITPOINT\nINTERNAL DESIGN PREVIE\n社内デザイン確認用');
  const companyNotice=textToHtml(data.company_notice||'');
  const companyUrl=safeUrl(data.company_information_url||'');
  const tradingUrl=safeUrl(data.trading_terms_url||'');
