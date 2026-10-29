@@ -1047,7 +1047,7 @@ function buildCoincheckEmailConfirmationPreview(data = {}) {
     const helpLabel = textToHtml(data.help_center_label || '■ヘルプセンター');
     const helpUrl = safeUrl(data.help_center_url || '');
     const company = textToHtml(data.company_information || 'コインチェック株式会社\n社内デザイン確認用');
-    const copyright = textToHtml(data.copyright_text || 
+    const copyright = textToHtml(data.copyright_text || '社内デザイン確認用');
     const linkStyle = 'color:#0066cc;text-decoration:underline;word-break:break-all;';
 
     return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -1101,6 +1101,7 @@ function buildBitflyerAnnouncementPreview(data = {}) {
     const footerMessage = textToHtml(data.footer_message || '');
     const companyInformation = textToHtml(data.company_information || '');
     const contactUrl = safeUrl(data.contact_url || '');
+    const copyrightText = textToHtml(data.copyright_text || '');
     const linkStyle = 'color:#065fd4;text-decoration:underline;word-break:break-all;';
 
     return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
