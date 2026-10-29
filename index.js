@@ -1034,7 +1034,7 @@ function buildBitpointServiceAnnouncementPreview(data = {}) {
  const unsubscribeLabel=textToHtml(data.unsubscribe_label||'メール配信の停止をご希望の方はこちらをクリック');
  const unsubscribeUrl=safeUrl(data.unsubscribe_url||'');
  const ls='color:#087dcc;text-decoration:underline;word-break:break-all;';
- return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;background:#e5e5e5;color:#111;font-family:Arial,Helvetica,'Yu Gothic',YuGothic,Meiryo,sans-serif;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#e5e5e5;"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px;background:#fff;"><tr><td align="center" style="padding:28px 16px 22px;">${logo?`<img src="${escapeHtml(logo)}" alt="BITPOINT" style="display:block;max-width:190px;width:100%;height:auto;border:0;margin:0 auto;">`:''}</td></tr><tr><td style="padding:0 16px 26px;font-size:12px;line-height:1.65;text-align:left;"><div style="font-size:15px;font-weight:700;margin-bottom:28px;">${title}</div><div style="margin-bottom:18px;">${intro}</div><div style="margin-bottom:26px;">${body}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${periodTitle}</div><div style="margin-bottom:27px;">${periodText}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${noticeTitle}</div><div style="margin-bottom:20px;">${noticeBody}</div><div style="margin-bottom:26px;">${closing}</div><div style="margin-bottom:26px;">${noReply}</div><div style="margin-bottom:16px;">${company}</div>${companyUrl?`<div style="margin-bottom:10px;"><a href="${escapeHtml(companyUrl)}" style="${ls}">${escapeHtml(companyUrl)}</a></div>`:''}<div style="margin-bottom:18px;">${companyNotice}</div>${tradingUrl?`<div style="margin-bottom:5px;"><a href="${escapeHtml(tradingUrl)}" style="${ls}">取引約款</a></div>`:''}${cryptoUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(cryptoUrl)}" style="${ls}">暗号資産取引に関する説明</a></div>`:''}<div style="white-space:pre-line;margin-bottom:28px;">${risk}</div><div style="font-weight:700;margin-bottom:8px;">${deliveryTitle}</div><div style="margin-bottom:12px;">${deliveryText}</div>${unsubscribeUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(unsubscribeUrl)}" style="${ls}">${unsubscribeLabel}</a></div>`:''}<div style="margin-top:24px;text-align:center;font-size:9px;color:#555;">INTERNAL DESIGN PREVIEW</div></td></tr></table></td></tr></table></body></html>`;
+ return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:0;background:#e5e5e5;color:#111;font-family:Arial,Helvetica,'Yu Gothic',YuGothic,Meiryo,sans-serif;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#e5e5e5;"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px;background:#fff;"><tr><td align="center" style="padding:28px 16px 22px;">${logo?`<img src="${escapeHtml(logo)}" alt="BITPOINT" style="display:block;max-width:190px;width:100%;height:auto;border:0;margin:0 auto;">`:''}</td></tr><tr><td style="padding:0 16px 26px;font-size:12px;line-height:1.65;text-align:left;"><div style="font-size:15px;font-weight:700;margin-bottom:28px;">${title}</div><div style="margin-bottom:18px;">${intro}</div><div style="margin-bottom:26px;">${body}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${periodTitle}</div><div style="margin-bottom:27px;">${periodText}</div><div style="font-size:13px;font-weight:700;padding-bottom:7px;border-bottom:1px solid #16a7e0;margin-bottom:8px;">${noticeTitle}</div><div style="margin-bottom:20px;">${noticeBody}</div><div style="margin-bottom:26px;">${closing}</div><div style="margin-bottom:26px;">${noReply}</div><div style="margin-bottom:16px;">${company}</div>${companyUrl?`<div style="margin-bottom:10px;"><a href="${escapeHtml(companyUrl)}" style="${ls}">${escapeHtml(companyUrl)}</a></div>`:''}<div style="margin-bottom:18px;">${companyNotice}</div>${tradingUrl?`<div style="margin-bottom:5px;"><a href="${escapeHtml(tradingUrl)}" style="${ls}">取引約款</a></div>`:''}${cryptoUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(cryptoUrl)}" style="${ls}">暗号資産取引に関する説明</a></div>`:''}<div style="white-space:pre-line;margin-bottom:28px;">${risk}</div><div style="font-weight:700;margin-bottom:8px;">${deliveryTitle}</div><div style="margin-bottom:12px;">${deliveryText}</div>${unsubscribeUrl?`<div style="margin-bottom:24px;"><a href="${escapeHtml(unsubscribeUrl)}" style="${ls}">${unsubscribeLabel}</a></div>`:''}<div style="margin-top:24px;text-align:center;font-size:9px;color:#555;/div></td></tr></table></td></tr></table></body></html>`;
 }
 
 function buildCoincheckEmailConfirmationPreview(data = {}) {
@@ -1046,8 +1046,8 @@ function buildCoincheckEmailConfirmationPreview(data = {}) {
     const deviceNotice = textToHtml(data.device_notice || '※会員登録を開始した端末とは別の端末から、上記URLを開く場合\nURLを開いた後に、アプリに戻り、画面下部の「別の端末でURLを開いた方はこちら」を押してください。');
     const helpLabel = textToHtml(data.help_center_label || '■ヘルプセンター');
     const helpUrl = safeUrl(data.help_center_url || '');
-    const company = textToHtml(data.company_information || 'コインチェック株式会社\nINTERNAL DESIGN PREVIEW\n社内デザイン確認用');
-    const copyright = textToHtml(data.copyright_text || 'INTERNAL DESIGN PREVIEW');
+    const company = textToHtml(data.company_information || 'コインチェック株式会社\n社内デザイン確認用');
+    const copyright = textToHtml(data.copyright_text || 
     const linkStyle = 'color:#0066cc;text-decoration:underline;word-break:break-all;';
 
     return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -1101,8 +1101,6 @@ function buildBitflyerAnnouncementPreview(data = {}) {
     const footerMessage = textToHtml(data.footer_message || '');
     const companyInformation = textToHtml(data.company_information || '');
     const contactUrl = safeUrl(data.contact_url || '');
-    const copyrightText = textToHtml(data.copyright_text || 'INTERNAL DESIGN PREVIEW');
-
     const linkStyle = 'color:#065fd4;text-decoration:underline;word-break:break-all;';
 
     return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -1112,8 +1110,6 @@ function buildBitflyerAnnouncementPreview(data = {}) {
 <tr><td align="center" style="padding:0 0 10px;">
 ${banner ? `<img src="${escapeHtml(banner)}" alt="bitFlyer Announcement" width="540" style="display:block;width:100%;max-width:540px;height:auto;border:0;">` : ''}
 </td></tr>
-
-<tr><td align="center" style="padding:5px 18px;background:#f3f4f6;font-size:9px;font-weight:700;color:#444;">INTERNAL DESIGN PREVIEW</td></tr>
 
 <tr><td style="padding:14px 0 0;font-size:11px;line-height:1.65;text-align:left;">
 <div style="margin-bottom:12px;">${salutation}</div>
@@ -1159,7 +1155,6 @@ ${footerMessage ? `<div style="margin-bottom:18px;">${footerMessage}</div>` : ''
 ${companyInformation ? `<div style="margin-bottom:8px;">${companyInformation}</div>` : ''}
 ${contactUrl ? `<div style="margin-bottom:8px;">お問い合わせURL：<a href="${escapeHtml(contactUrl)}" style="${linkStyle}">${escapeHtml(contactUrl)}</a></div>` : ''}
 ${copyrightText ? `<div>${copyrightText}</div>` : ''}
-<div style="margin-top:12px;font-weight:700;">INTERNAL DESIGN PREVIEW</div>
 </td></tr>
 </table>
 </td></tr></table>
@@ -1183,7 +1178,6 @@ function buildBitbankHardforkPreview(data = {}) {
 <body style="margin:0;padding:0;background:#fff;color:#4a4a4a;font-family:Arial,'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',YuGothic,Meiryo,sans-serif;">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:505px;background:#fff;">
 <tr><td align="center" style="padding:14px 0 15px;"><img src="${logo}" alt="bitbank" width="163" style="display:block;width:163px;max-width:100%;height:auto;border:0;margin:0 auto;"></td></tr>
-<tr><td align="center" style="background:#fff7d6;padding:5px;font-size:9px;font-weight:700;color:#6b5900;">INTERNAL DESIGN PREVIEW</td></tr>
 <tr><td><img src="${banner}" alt="" width="504" style="display:block;width:100%;max-width:504px;height:auto;border:0;margin:0 auto;"></td></tr>
 <tr><td style="padding-top:17px;font-size:13px;line-height:1.75;color:#555;">${body}</td></tr>
 <tr><td style="padding-top:12px;"><table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:12px;color:#444;"><tr><td style="border:1px solid #555;padding:3px 5px;font-weight:700;">対象ネットワーク名</td><td style="border:1px solid #555;padding:3px 5px;font-weight:700;">暗号資産名（ティッカー名）</td></tr><tr><td style="border:1px solid #555;padding:3px 5px;">${network}</td><td style="border:1px solid #555;padding:3px 5px;">${asset}</td></tr></table></td></tr>
