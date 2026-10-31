@@ -1194,15 +1194,73 @@ ${companyInformation ? `<tr><td style="padding:0 15px 34px;text-align:center;fon
 </table></td></tr></table></body></html>`;
 }
 
+const SUPPORTED_TEMPLATES = [
+ 'binance_japan_maintenance_preview_v1',
+ 'binance_japan_full_preview_v1',
+ 'bitpoint_service_announcement_preview_v1',
+ 'coincheck_email_confirmation_preview_v1',
+ 'coincheck_maintenance_information_preview_v1',
+ 'bitflyer_announcement_preview_v1',
+ 'bitbank_hardfork_preview_v1'
+];
+
+function buildCoincheckMaintenanceInformationPreview(data = {}) {
+ const logo=safeUrl(data.logo_url||'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/8a9e5b04-2f88-433e-b79e-160d66db4aa7/coincheck-confirmation-logo.png');
+ const title=textToHtml(data.announcement_title||data.heading||'メンテナンスに関するお知らせ');
+ const intro=textToHtml(data.intro_text||data.salutation||'いつもCoincheckをご利用いただきありがとうございます。');
+ const body=textToHtml(data.announcement_body||data.body||'サービスの安定運用のため、下記の時間帯にメンテナンスを実施いたします。');
+ const maintenance=textToHtml(data.maintenance||data.period_text||'');
+ const noticeTitle=textToHtml(data.notice_title||'メンテナンス中のご利用について');
+ const noticeBody=textToHtml(data.notice_body||data.suspension_note||'メンテナンス中は一部サービスをご利用いただけない場合があります。');
+ const resume=textToHtml(data.resumption_time||data.resumption_note||'メンテナンス完了後、順次サービスを再開いたします。');
+ const closing=textToHtml(data.closing_text||'ご不便をおかけいたしますが、何卒ご理解賜りますようお願い申し上げます。');
+ const helpLabel=textToHtml(data.help_center_label||'■ヘルプセンター');
+ const helpUrl=safeUrl(data.help_center_url||data.inquiry_url||data.contact_url||'');
+ const company=textToHtml(data.company_information||'コインチェック株式会社');
+ const footer=textToHtml(data.footer_notice||data.footer_message||'');
+ const linkStyle='color:#0066cc;text-decoration:underline;word-break:break-all;';
+
+ return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#dedede;color:#222;font-family:Arial,Helvetica,'Yu Gothic',YuGothic,Meiryo,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#dedede;"><tr><td align="center">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#fff;">
+<tr><td align="center" style="padding:38px 30px 42px;">
+${logo?`<img src="${escapeHtml(logo)}" alt="Coincheck" width="200" height="105" style="display:block;width:200px;height:105px;max-width:100%;object-fit:contain;border:0;margin:0 auto;">`:''}
+</td></tr>
+<tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;">
+<tr><td style="padding:0 0 34px;font-size:14px;line-height:1.7;text-align:left;">
+<div style="font-size:19px;font-weight:700;margin-bottom:24px;">${title}</div>
+<div style="margin-bottom:18px;">${intro}</div>
+<div style="margin-bottom:24px;">${body}</div>
+${maintenance?`<div style="background:#f7f7f7;border:1px solid #e3e3e3;padding:14px 16px;margin-bottom:24px;"><div style="font-weight:700;margin-bottom:6px;">メンテナンス予定</div><div>${maintenance}</div></div>`:''}
+<div style="font-weight:700;margin-bottom:7px;">${noticeTitle}</div>
+<div style="margin-bottom:22px;">${noticeBody}</div>
+${resume?`<div style="margin-bottom:22px;">${resume}</div>`:''}
+<div style="margin-bottom:30px;">${closing}</div>
+<div style="font-weight:700;margin-bottom:3px;">${helpLabel}</div>
+${helpUrl?`<div style="margin-bottom:30px;"><a href="${escapeHtml(helpUrl)}" style="${linkStyle}">${escapeHtml(helpUrl)}</a></div>`:''}
+<div style="border-top:1px dashed #777;margin-bottom:10px;"></div>
+<div style="font-size:13px;line-height:1.55;">${company}</div>
+${footer?`<div style="margin-top:12px;font-size:11px;line-height:1.55;color:#666;">${footer}</div>`:''}
+<div style="border-top:1px dashed #777;margin-top:10px;"></div>
+<div style="padding:12px 0 0;text-align:center;font-size:9px;line-height:1.4;">INTERNAL DESIGN PREVIEW</div>
+</td></tr></table></td></tr>
+</table></td></tr></table></body></html>`;
+}
+
 function selectCampaignTemplate(templateData) {
  const key=String(templateData?.template_key||'').trim();
  if(key==='binance_japan_maintenance_preview_v1') return buildBinanceJapanMaintenancePreview(templateData);
  if(key==='binance_japan_full_preview_v1') return buildBinanceJapanFullPreview(templateData);
  if(key==='bitpoint_service_announcement_preview_v1') return buildBitpointServiceAnnouncementPreview(templateData);
  if(key==='coincheck_email_confirmation_preview_v1') return buildCoincheckEmailConfirmationPreview(templateData);
+ if(key==='coincheck_maintenance_information_preview_v1') return buildCoincheckMaintenanceInformationPreview(templateData);
  if(key==='bitflyer_announcement_preview_v1') return buildBitflyerAnnouncementPreview(templateData);
  if(key==='bitbank_hardfork_preview_v1') return buildBitbankHardforkPreview(templateData);
- return buildGoldenXEmail(templateData);
+
+ const error=new Error(`Unsupported template_key: ${key||'(empty)'}`);
+ error.code='UNSUPPORTED_TEMPLATE';
+ throw error;
 }
 
 /* =========================================================
@@ -1235,7 +1293,10 @@ app.get('/', (req, res) => {
                 : 'missing',
 
         sender:
-            FROM_EMAIL
+            FROM_EMAIL,
+
+        supported_templates:
+            SUPPORTED_TEMPLATES
     });
 });
 
@@ -1593,6 +1654,15 @@ app.post(
                 'CAMPAIGN TEST ERROR:',
                 error
             );
+
+            if (error?.code === 'UNSUPPORTED_TEMPLATE') {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Template não suportado',
+                    template_key: String(req.body?.template_key || '').trim(),
+                    supported_templates: SUPPORTED_TEMPLATES
+                });
+            }
 
             return res.status(500).json({
                 success: false,
