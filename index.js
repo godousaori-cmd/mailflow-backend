@@ -1055,7 +1055,7 @@ function buildCoincheckEmailConfirmationPreview(data = {}) {
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#dedede;"><tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#fff;">
 <tr><td align="center" style="padding:40px 30px 62px;">
-${logo ? `<img src="${escapeHtml(logo)}" alt="Coincheck" width="200" style="display:block;width:200px;max-width:100%;height:auto;border:0;margin:0 auto;">` : ''}
+${logo ? `<img src="${escapeHtml(logo)}" alt="Coincheck" width="200" height="105" style="display:block;width:200px;height:105px;max-width:100%;object-fit:contain;border:0;margin:0 auto;">` : ''}
 </td></tr>
 <tr><td align="center">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;">
