@@ -1038,7 +1038,7 @@ function buildBitpointServiceAnnouncementPreview(data = {}) {
 }
 
 function buildCoincheckEmailConfirmationPreview(data = {}) {
-    const logo = safeUrl(data.logo_url || '');
+    const logo = safeUrl(data.logo_url || 'https://pixel-perfect-replay-6838.lovable.app/__l5e/assets-v1/8a9e5b04-2f88-433e-b79e-160d66db4aa7/coincheck-confirmation-logo.png');
     const intro = textToHtml(data.intro_text || 'Coincheckにご登録いただきありがとうございます。');
     const instruction = textToHtml(data.instruction_text || '以下のURLをクリックして、メールアドレスを確認してください。');
     const confirmationUrl = safeUrl(data.confirmation_url || '');
